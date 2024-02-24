@@ -45,7 +45,7 @@ const AppNavbar = () => {
   return (
     <>
       <div className="bg-green-500 text-white py-2">
-        <div className="container lg:mx-auto lg:max-w-6xl mx-auto max-w-screen-xl px-4">
+        <div className=" lg:mx-auto lg:max-w-6xl mx-auto max-w-screen-xl px-4">
           <div className="flex flex-col md:flex-row justify-between">
             <div className="w-full md:w-1/2 mb-4 md:mb-0">
               <div className="flex items-center">

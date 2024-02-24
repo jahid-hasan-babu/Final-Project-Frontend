@@ -166,9 +166,15 @@ export const productListById = async (id) => {
 
 export const ListByProductName = async (pname) => {
   try {
-    let res = await axios.get(BaseURL + "/ListByProductName/" + pname);
-    res.data;
-  } catch (e) {
+    const res = await axios.get(`${BaseURL}/ListByProductName/${pname}`);
+    if (res.data.status === "success") {
+      return res.data.data;
+    } else {
+      console.error("Error in ListByProductName:", res.data.message);
+      return [];
+    }
+  } catch (error) {
+    console.error("Error in ListByProductName:", error);
     return [];
   }
 };

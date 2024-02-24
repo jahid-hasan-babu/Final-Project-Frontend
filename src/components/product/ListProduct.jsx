@@ -76,18 +76,19 @@ const ListProduct = () => {
 
   return (
     <>
-      <div className="w-11/12 mx-auto pb-9">
-        <div className="flex items-center justify-between mb-6">
+      <div className="w-11/12 mx-auto py-9">
+        <div className="flex items-center justify-end mb-6">
           <input
             type="text"
             placeholder="Search by product name..."
             value={pname}
             onChange={(e) => setPname(e.target.value)}
-            className="w-full px-3 py-2 rounded-md border-gray-300 focus:border-green-500 focus:ring focus:ring-green-500 focus:ring-opacity-50"
+            className="w-full md:w-[30%] xl:w-[20%] px-3 py-2  rounded-md border border-green-500 focus:border-green-500 focus:ring-green-500 mt-2 md:mt-0 mr-2 md:mr-0"
+            style={{ borderColor: "#48BB78" }} // Setting border color directly
           />
           <button
             onClick={handleSearch}
-            className="ml-4 bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-500"
+            className="bg-green-500 text-white px-4 py-2 ml-3 rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-500"
           >
             Search
           </button>
