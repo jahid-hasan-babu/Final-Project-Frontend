@@ -178,3 +178,35 @@ export const ListByProductName = async (pname) => {
     return [];
   }
 };
+
+//sort by brand
+export const ListByBrand = async (brand) => {
+  try {
+    const res = await axios.get(`${BaseURL}/ListByBrand/${brand}`);
+    if (res.data.status === "success") {
+      return res.data.data;
+    } else {
+      console.error("Error in ListByProductName:", res.data.message);
+      return [];
+    }
+  } catch (error) {
+    console.error("Error in ListByProductName:", error);
+    return [];
+  }
+};
+
+//sort by category
+export const ListByCategory = async (category) => {
+  try {
+    const res = await axios.get(`${BaseURL}/ListByCategory/${category}`);
+    if (res.data.status === "success") {
+      return res.data.data;
+    } else {
+      console.error("Error in ListByProductName:", res.data.message);
+      return [];
+    }
+  } catch (error) {
+    console.error("Error in ListByProductName:", error);
+    return [];
+  }
+};

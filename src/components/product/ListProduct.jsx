@@ -4,6 +4,8 @@ import { RiDeleteBinLine } from "react-icons/ri";
 import { toast, Toaster } from "react-hot-toast";
 import { Link } from "react-router-dom";
 import {
+  ListByBrand,
+  ListByCategory,
   ListByProductName,
   deleteProduct,
   productListRequest,
@@ -13,6 +15,8 @@ const ListProduct = () => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [pname, setPname] = useState("");
+  const [brand, setBrand] = useState("");
+  const [category, setCategory] = useState("");
 
   useEffect(() => {
     fetchData();
@@ -21,9 +25,14 @@ const ListProduct = () => {
   const fetchData = async () => {
     try {
       const res = await productListRequest();
-      console.log("Response from productListRequest:", res); // Add this line
+
       if (res !== undefined) {
         setData(res);
+        if (!brand && res.length > 0) {
+          setBrand(res[0].brand);
+        } else if (!category && res.length > 0) {
+          setCategory(res[0].category);
+        }
       } else {
         console.error("Response from productListRequest is undefined");
       }
@@ -38,8 +47,39 @@ const ListProduct = () => {
     try {
       setLoading(true);
       const res = await ListByProductName(pname);
-      console.log("Response from ListByProductName:", res); // Add this line
       setData(res);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error searching products:", error);
+      setLoading(false);
+    }
+  };
+
+  const sortByBrand = async (selectedBrand) => {
+    try {
+      setLoading(true);
+      const res = await ListByBrand(selectedBrand);
+      if (res === null) {
+        setData(data); // Keep the existing data if res is null
+      } else {
+        setData(res);
+      }
+      setLoading(false);
+    } catch (error) {
+      console.error("Error searching products:", error);
+      setLoading(false);
+    }
+  };
+
+  const sortByCategory = async (selectedCategory) => {
+    try {
+      setLoading(true);
+      const res = await ListByCategory(selectedCategory);
+      if (res === null) {
+        setData(data); // Keep the existing data if res is null
+      } else {
+        setData(res);
+      }
       setLoading(false);
     } catch (error) {
       console.error("Error searching products:", error);
@@ -76,19 +116,59 @@ const ListProduct = () => {
 
   return (
     <>
-      <div className="w-11/12 mx-auto py-9">
-        <div className="flex items-center justify-end mb-6">
+      <div className="lg:mx-auto md:mx-auto lg:max-w-6xl md:max-w-5xl py-9">
+        <div className="flex flex-col md:flex-row items-center justify-center mb-6 space-y-4 md:space-y-0 md:space-x-4">
+          <select
+            onChange={(e) => {
+              const selectedBrand = e.target.value;
+              setBrand(selectedBrand);
+              sortByBrand(selectedBrand); // Call sortByBrand with the selected value
+            }}
+            className="w-full md:w-[30%] xl:w-[20%] px-3 py-2 rounded-md border border-green-500 focus:border-green-500 focus:ring-green-500"
+          >
+            <option value="">Choose Brand</option>
+            {data !== null ? (
+              data.map((item, i) => (
+                <option key={i} value={item.brand}>
+                  {item["brand"]}
+                </option>
+              ))
+            ) : (
+              <option disabled>Loading...</option>
+            )}
+          </select>
+
+          <select
+            onChange={(e) => {
+              const selectedCategory = e.target.value;
+              setCategory(selectedCategory);
+              sortByCategory(selectedCategory); // Call sortByBrand with the selected value
+            }}
+            className="w-full md:w-[30%] xl:w-[20%] px-3 py-2 rounded-md border border-green-500 focus:border-green-500 focus:ring-green-500"
+          >
+            <option value="">Choose Category</option>
+            {data !== null ? (
+              data.map((item, i) => (
+                <option key={i} value={item.category}>
+                  {item["category"]}
+                </option>
+              ))
+            ) : (
+              <option disabled>Loading...</option>
+            )}
+          </select>
+
           <input
             type="text"
             placeholder="Search by product name..."
             value={pname}
             onChange={(e) => setPname(e.target.value)}
-            className="w-full md:w-[30%] xl:w-[20%] px-3 py-2  rounded-md border border-green-500 focus:border-green-500 focus:ring-green-500 mt-2 md:mt-0 mr-2 md:mr-0"
+            className="w-full md:w-[30%] xl:w-[40%] px-3 py-2 rounded-md border border-green-500 focus:border-green-500 focus:ring-green-500"
             style={{ borderColor: "#48BB78" }} // Setting border color directly
           />
           <button
             onClick={handleSearch}
-            className="bg-green-500 text-white px-4 py-2 ml-3 rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-500"
+            className="w-full md:w-auto bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none focus:ring focus:ring-green-500"
           >
             Search
           </button>

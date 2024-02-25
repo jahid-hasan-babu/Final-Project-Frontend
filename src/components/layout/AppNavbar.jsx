@@ -7,6 +7,8 @@ import { MdMarkEmailUnread } from "react-icons/md";
 import { FaPhoneAlt } from "react-icons/fa";
 import { LogOutUser, ReadProfileRequest } from "../../userApi/api";
 import { useNavigate } from "react-router-dom";
+import { RxCross2 } from "react-icons/rx";
+import { FaBars } from "react-icons/fa";
 
 const AppNavbar = () => {
   const navigate = useNavigate();
@@ -86,11 +88,11 @@ const AppNavbar = () => {
                 </Link>
                 <div className="block lg:hidden">
                   <button className="navbar-toggler" onClick={toggleMenu}>
-                    <img
-                      src={userData.image}
-                      alt="Menu Icon"
-                      className="h-6 w-6"
-                    />
+                    {showMenu ? (
+                      <RxCross2 className="text-3xl" />
+                    ) : (
+                      <FaBars className="text-3xl" />
+                    )}
                   </button>
                 </div>
 
