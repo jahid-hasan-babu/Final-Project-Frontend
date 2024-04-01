@@ -1,6 +1,6 @@
 import axios from "axios";
 
-let BaseURL = `http://localhost:9000/api/v1`;
+let BaseURL = `final-project-backend-flax.vercel.app/api/v1`;
 
 function unauthorized(code) {
   if (code === 401) {
