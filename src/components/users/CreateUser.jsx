@@ -9,9 +9,9 @@ const CreateUser = () => {
     email: "",
     mobile: "",
     password: "",
-    image: null, // Store the selected image file
+    image: "",
   });
-
+  const [imagePreview, setImagePreview] = useState(null);
   const navigate = useNavigate();
 
   const handleInputChange = (name, value) => {
@@ -21,11 +21,6 @@ const CreateUser = () => {
     }));
   };
 
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    setFormData({ ...formData, image: file });
-  };
-
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
@@ -33,7 +28,8 @@ const CreateUser = () => {
         formData.name.trim() === "" ||
         formData.email.trim() === "" ||
         formData.mobile.trim() === "" ||
-        formData.password.trim() === ""
+        formData.password.trim() === "" ||
+        formData.image.trim() === ""
       ) {
         toast.error("All fields are required!");
         return;
@@ -64,7 +60,7 @@ const CreateUser = () => {
       sessionStorage.setItem("userEmail", formData.email);
       let encodedImage = null;
       if (formData.image) {
-        encodedImage = await convertImageToBase64(formData.image);
+        encodedImage = await handleImageChange(formData.image);
       } else {
         encodedImage =
           "https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg";
@@ -86,20 +82,45 @@ const CreateUser = () => {
     }
   };
 
-  const convertImageToBase64 = (imageFile) => {
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    TransformFile(file);
+  };
+
+  const TransformFile = (file) => {
     return new Promise((resolve, reject) => {
+      if (!file) {
+        setFormData((prevData) => ({
+          ...prevData,
+          image: "",
+        }));
+        setImagePreview(null);
+        resolve();
+        return;
+      }
+
       const reader = new FileReader();
-      reader.readAsDataURL(imageFile);
+
       reader.onload = () => {
-        resolve(reader.result);
+        const imageData = reader.result;
+        setFormData((prevData) => ({
+          ...prevData,
+          image: imageData,
+        }));
+        setImagePreview(imageData);
+        resolve();
       };
+
       reader.onerror = (error) => {
         reject(error);
       };
+
+      reader.readAsDataURL(file);
     });
   };
+
   return (
-    <div>
+    <div className="bg-gray-300 py-10">
       <h1 className="font-bold text-3xl text-center py-5">Create User</h1>
       <form
         onSubmit={handleSubmit}
@@ -190,13 +211,19 @@ const CreateUser = () => {
           </label>
           <input
             type="file"
-            id="image"
             name="image"
-            onChange={(e) => {
-              handleImageChange("image", e.target.value);
-            }}
+            accept="image/*"
+            onChange={handleImageChange}
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
+          {imagePreview && (
+            <img
+              src={imagePreview}
+              alt="Image Preview"
+              className="rounded-md mb-4 py-5"
+              style={{ maxWidth: "100%", maxHeight: "200px" }}
+            />
+          )}
         </div>
         <button
           type="submit"
